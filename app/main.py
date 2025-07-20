@@ -30,7 +30,7 @@ class InputData(BaseModel):
 
 @app.get("/", response_class=HTMLResponse)
 async def read_form(request: Request):
-    return templates.TemplateResponse("index.html", {"request": request, "features": FEATURES, "prediction": None})
+    return templates.TemplateResponse(request=request, name="index.html", context={"features": FEATURES, "prediction": None})
 
 @app.post("/predict")
 async def predict_api(data: InputData):
@@ -53,4 +53,4 @@ async def predict_ui(request: Request,
 ):
     features = np.array([[MedInc, HouseAge, AveRooms, AveBedrms, Population, AveOccup, Latitude, Longitude]])
     prediction = model.predict(features)[0]
-    return templates.TemplateResponse("index.html", {"request": request, "features": FEATURES, "prediction": round(prediction, 3)})
+    return templates.TemplateResponse(request=request, name="index.html", context={"features": FEATURES, "prediction": round(prediction, 3)})
