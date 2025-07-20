@@ -2,26 +2,7 @@
 
 A machine learning web app that predicts California house prices using FastAPI and Docker.
 
-## Quick Start
 
-### Option 1: Using Docker (Recommended)
-```bash
-git clone <your-repo>
-cd mlops-demo
-docker build -t house-predictor .
-docker run -p 8000:8000 house-predictor
-```
-
-### Option 2: Local Development
-```bash
-git clone <your-repo>
-cd mlops-demo
-pip install -r app/requirements.txt
-python model/train.py
-uvicorn app.main:app --reload
-```
-
-Open http://localhost:8000 in your browser.
 
 ## What It Does
 
