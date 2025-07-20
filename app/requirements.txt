@@ -4,3 +4,8 @@ scikit-learn
 joblib
 pydantic
 numpy
+jinja2
+aiofiles
+pytest
+httpx
+python-multipart
