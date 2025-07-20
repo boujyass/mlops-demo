@@ -1,4 +1,4 @@
-name: Build and Push Docker Image
+name: Build, Push, and Deploy
 
 on:
   push:
@@ -67,3 +67,42 @@ jobs:
         tags: ${{ secrets.DOCKER_USERNAME }}/mlops-demo:latest,${{ secrets.DOCKER_USERNAME }}/mlops-demo:${{ github.sha }}
         cache-from: type=gha
         cache-to: type=gha,mode=max
+
+  deploy:
+    needs: build_and_push
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - name: Deploy to Render
+      run: |
+        echo "🚀 Triggering deployment to Render..."
+        curl -X POST "${{ secrets.RENDER_DEPLOY_HOOK }}"
+        echo "✅ Deploy hook triggered successfully!"
+        
+    - name: Wait for deployment
+      run: |
+        echo "⏱️ Waiting for deployment to complete..."
+        sleep 90
+        
+    - name: Health check
+      run: |
+        echo "🔍 Checking if app is healthy..."
+        for i in {1..5}; do
+          if curl -f "${{ secrets.RENDER_APP_URL }}" -m 10; then
+            echo "✅ App is live and healthy!"
+            echo "🌐 Your app is available at: ${{ secrets.RENDER_APP_URL }}"
+            exit 0
+          fi
+          echo "⏳ Attempt $i failed, retrying in 30 seconds..."
+          sleep 30
+        done
+        echo "❌ Health check failed after 5 attempts"
+        exit 1
+        
+    - name: Deployment Success
+      run: |
+        echo "🎉 Deployment completed successfully!"
+        echo "🌐 Live at: ${{ secrets.RENDER_APP_URL }}"
+        echo "🔄 Future pushes to main will auto-deploy!"
