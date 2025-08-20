@@ -29,8 +29,11 @@ mlops-demo/
 ## API Usage
 
 **Web Interface:** 
+
 Locally: http://localhost:8000
+
 Deployed version: https://mlops-demo-latest.onrender.com/
+
 **Predict API:**
 ```bash
 curl -X POST "http://localhost:8000/predict" \
